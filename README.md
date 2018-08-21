@@ -16,14 +16,15 @@ source activate gatk
 Pero no parece que sea necesario con estas herramientas, asi que no hace falta activarlo. Y mejor, pq el script de python del final es java 2 y puede no funcionar si el entorno es java 3.
 
 El Base Recalibrator (BQSR) de Gatk necesita una lista de SNPs ya detectados. Se le puede dar una lista vacia, pero aprovechamos la BBDD que tenemos. Se puede utilizar el formato table. Para gatk4 hay que hacer:
+sed -i "s|^|MTB_anc:|g" BBDD_260718
+Y se pone HEADER como primera linea (a mano o no)
 mv BBDD_260718 BBDD_260718.table
 ~/programitas/gatk-4.0.6.0/gatk IndexFeatureFile -F BBDD_260718.table 
 Hay que darle extension .table para que gatk4 sepa lo que es e indexarlo (en gatk 3 detectaba el nombre de otra manera y lo indexaba solo)
 
 Tambien hace falta crear un sequence dictionary del genoma de referencia:
-~/programitas/gatk-4.0.6.0/gatk CreateSequenceDictionary -R ~/Escritorio/gm/referencias/MTB_ancestorII_reference.fasta -O ~/Escritorio/gm/refe
-rencias/MTB_ancestorII_reference.dict
+~/programitas/gatk-4.0.6.0/gatk CreateSequenceDictionary -R ~/Escritorio/gm/referencias/MTB_ancestorII_reference.fasta -O ~/Escritorio/gm/referencias/MTB_ancestorII_reference.dict
 
 Al hacer bwa mem le ponemos una cabecera al .bam resultado, porque luego lo pide gatk. Lo unico con un valor serio es lo de "illumina". Para lo demás en este caso ponemos cualquier cosa, pero con otros usos de gatk habría que mirarlo con más cuidado por si acaso
 
-
+Al genoma de referencia se le pone extension .fasta (en vez de .fas) pq si no Gatk se queja.
